@@ -13,6 +13,20 @@
 
     <script type="text/javascript">
       var navObj = "textcnn";
+      function classify() {
+    	  var txtWord = $("#txtWord").val();
+    	  if (txtWord == undefined || txtWord == null || txtWord == '') {
+    		  alert("请输入要测试的搜索词");
+    		  return;
+    	  }
+    	  $.ajax({
+    		  type:"get",
+    		  url:"/tf/classify?txtWord="+txtWord,
+    	      success:function(result) {
+    	    	  $("#classify_result").text(result);
+    	      }
+    	  });
+      }
     </script>
   </head>
   <body>
@@ -29,17 +43,17 @@
 	        <div class="panel panel-default">
 	            <div class="panel-heading">TextCnn分类测试</div>
 	            <div class="panel-body">
-	              <form action="/forget/segment" class="form-inline">
+	              <form class="form-inline">
 	                <div class="form-group">
 	                  <label for="txtWord">输出词汇</label>
 	                  <input type="text" class="form-control" id="txtWord" size="35">
 	                </div>
-	                <button type="button" class="btn btn-default" onclick="javascript:segments();">分词</button><br>
+	                <button type="button" class="btn btn-default" onclick="javascript:classify();">测试分类</button><br>
 	              </form><br>
 	              <form action="" class="form-inline">
 	                <div class="form-group">
 	                  <label>分类结果：</label>
-	                  <span id="segment_result"></span>
+	                  <span id="classify_result"></span>
 	                </div>
 	              </form>
 	            </div>
