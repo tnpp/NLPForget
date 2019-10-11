@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <title>NLP Demo</title>
+    <meta name="description" content="NLP Demo">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link href="data:text/css;charset=utf-8," data-href="/bootstrap-3.3.7/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+    <script src="/jquery/jquery-1.11.3.min.js"></script>
+    <script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      var navObj = "forget";
+      function segments() {
+    	  var txtWord = $("#txtWord").val();
+    	  var wordLen = $("#wordLen").val();
+    	  if (wordLen == undefined || wordLen == null || wordLen == '') {
+    		  wordLen = 2;
+    	  }
+    	  $.ajax({
+    		  type:"get",
+    		  url:"/forget/segment?txtWord="+txtWord+"&wordLen="+wordLen,
+    	      success:function(result) {
+    	    	  $("#segment_result").text(result);
+    	      }
+    	  });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12"><h1>Welcome to NLP Demo</h1></div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          [#include "../common/left.html"]
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+              <blockquote><p class="text-success">${msg!}</p></blockquote>
+	          <div class="panel panel-default">
+	            <div class="panel-heading">搜索词文件上传</div>
+	            <div class="panel-body">
+	              <form method="post" action="/forget/do_upload_and_generate_dic" enctype="multipart/form-data">
+	                <div class="form-group">
+	                  <label>文件</label>
+	                  <input type="file" name="file">
+	                  <p class="help-block">默认搜索词文件：<a href="/file/lamp_lighting_searchkey.txt">灯具搜索词汇总</a></p>
+	                </div>
+	                <button type="submit" class="btn btn-success">&nbsp;提&nbsp;&nbsp;交&nbsp;</button>
+	                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#divDicsShow">查看词库</button>
+	              </form>
+	            </div>
+          	  </div>
+          </div>
+          <div class="row">
+	          <div class="panel panel-default">
+	            <div class="panel-heading">分词测试</div>
+	            <div class="panel-body">
+	              <form action="/forget/segment" class="form-inline">
+	                <div class="form-group">
+	                  <label for="txtWord">搜索词</label>
+	                  <input type="text" class="form-control" id="txtWord" size="35">
+	                </div>
+	                <div class="form-group">
+	                  <label for="wordLen">分词粒度</label>
+	                  <input type="text" class="form-control" id="wordLen" placeholder="2">
+	                </div>
+	                <button type="button" class="btn btn-default" onclick="javascript:segments();">分词</button><br>
+	              </form><br>
+	              <form action="" class="form-inline">
+	                <div class="form-group">
+	                  <label>分词结果：</label>
+	                  <span id="segment_result"></span>
+	                </div>
+	              </form>
+	            </div>
+	          </div>
+	      </div>
+      </div>
+      
+    </div>
+    <div class="modal fade" id="divDicsShow" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">词汇列表</h4>
+          </div>
+          <div class="modal-body">
+            [#if dics?exists && dics?size gt 0]
+                <table class="table table-bordered">
+                  <tbody>
+                  [#list dics as d]
+                    <tr>
+                      <td>${d.word!!}</td>
+                    </tr>
+                  [/#list]
+                  </tbody>
+                </table>
+            [#else]
+                <p>没有词库</p>
+            [/#if]
+          </div>
+          <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">关闭</button></div>
+        </div>
+      </div>
+    
+    </div>
+    
+  </body>
+</html>
