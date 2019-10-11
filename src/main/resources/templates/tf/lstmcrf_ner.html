@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <title>NLP Demo</title>
+    <meta name="description" content="NLP Demo">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link href="data:text/css;charset=utf-8," data-href="/bootstrap-3.3.7/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+    <script src="/jquery/jquery-1.11.3.min.js"></script>
+    <script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      var navObj = "lstm_crf_ner";
+      function ner() {
+    	  var txtWord = $("#txtWord").val();
+    	  if (txtWord == undefined || txtWord == null || txtWord == '') {
+    		  alert("请输入要测试的搜索词");
+    		  return;
+    	  }
+    	  $.ajax({
+    		  type:"get",
+    		  url:"/tf/do_ner?txtWord="+txtWord,
+    	      success:function(result) {
+    	    	  $("#classify_result").text(result);
+    	      }
+    	  });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12"><h1>Welcome to NLP Demo</h1></div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          [#include "../common/left.html"]
+        </div>
+        <div class="col-md-10">
+            <blockquote><p class="text-success">${msg!}</p></blockquote>
+	        <div class="panel panel-default">
+	            <div class="panel-heading">实体识别模型测试</div>
+	            <div class="panel-body">
+	              <form class="form-inline">
+	                <select class="form-control">
+	                  <option value="LIGTH">灯具光源</option>
+	                  <option value="GREEN">园林绿化</option>
+	                  <option value="GLASSTILE">玻璃瓷砖</option>
+	                </select>
+	                <div class="form-group">
+	                  <label for="txtWord">输入词汇</label>
+	                  <input type="text" class="form-control" id="txtWord" size="35">
+	                </div>
+	                <button type="button" class="btn btn-default" onclick="javascript:ner();">测试实体识别</button><br>
+	              </form><br>
+	              <form action="" class="form-inline">
+	                <div class="form-group">
+	                  <label>实体识别结果：</label>
+	                  <span id="ner_result"></span>
+	                </div>
+	              </form>
+	            </div>
+	        </div>
+	    </div>
+      </div>
+    </div>
+   
+  </body>
+</html>
