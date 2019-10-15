@@ -81,14 +81,14 @@ public class LstmCrfNerService {
 
     public static void main(String[] args) {
         LstmCrfNerService s = new LstmCrfNerService();
-        // print(s.getLabel(CategoryEnum.LIGTH, "led李灯"));
-        // print(s.getLabel(CategoryEnum.LIGTH, "三管荧光灯"));
+        print(s.getLabel(CategoryEnum.LIGTH, "led李灯"));
+        print(s.getLabel(CategoryEnum.LIGTH, "三管荧光灯"));
         print(s.getLabel(CategoryEnum.GREEN, "罗汉松造型树"));
-        // print(s.getLabel(CategoryEnum.GREEN, "山里红树"));
-        // print(s.getLabel(CategoryEnum.LIGTH, "led节能通道(25w)"));
-        // print(s.getLabel(CategoryEnum.LIGTH, "绿羽毛"));
-        // print(s.getLabel(CategoryEnum.GLASSTILE, "600*1200*10玻化砖"));
-        // print(s.getLabel(CategoryEnum.GLASSTILE, "(伽马灰)夹胶玻璃"));
+        print(s.getLabel(CategoryEnum.GREEN, "山里红树"));
+        print(s.getLabel(CategoryEnum.LIGTH, "led节能通道(25w)"));
+        print(s.getLabel(CategoryEnum.LIGTH, "绿羽毛"));
+        print(s.getLabel(CategoryEnum.GLASSTILE, "600*1200*10玻化砖"));
+        print(s.getLabel(CategoryEnum.GLASSTILE, "(伽马灰)夹胶玻璃"));
     }
     private int[][] getTextToId(String text, Map<String, Integer> word_to_id) {
         int[][] txtToIds = new int[64][300];
