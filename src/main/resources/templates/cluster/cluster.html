@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <title>NLP Demo</title>
+    <meta name="description" content="NLP Demo">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link href="data:text/css;charset=utf-8," data-href="/bootstrap-3.3.7/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+    <script src="/jquery/jquery-1.11.3.min.js"></script>
+    <script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      var navObj = "cluster";
+      function showContents(kstr) {
+    	  $("#divContentsShow").modal();
+    	  $.ajax({
+    		  type:"get",
+    		  url:"/cluster/show_content?key="+kstr,
+    	      success:function(result) {
+    	    	  $("#p_content").text(result);
+    	      }
+    	  });
+      }
+      
+      function doCluster() {
+    	  var nCluster = $("#nCluster").val();
+    	  var limitEval = $("#limitEval").val();
+    	  if ( (nCluster == undefined || nCluster == null || nCluster == '') && (limitEval == undefined || limitEval == null || limitEval == '') ) {
+    		  alert("聚类个数和增幅阈值至少输入一个");
+    		  return;
+    	  }
+    	  $.ajax({
+    		  type:"get",
+    		  url:"/cluster/do_cluster?nCluster="+nCluster+"&limitEval="+limitEval,
+    	      success:function(result) {
+    	    	  $("#cluster_result").text(result);
+    	      }
+    	  });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12"><h1>Welcome to NLP Demo</h1></div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          [#include "../common/left.html"]
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+              <div class="col-md-3">
+                <div class="list-group">
+				  <a href="#" class="list-group-item disabled">
+				    词条描述文件
+				  </a>
+				  [#list files?keys as key]
+				    <a href="javascript:showContents('${key!}');" class="list-group-item" id="a_${key!}">${key!}</a>
+				  [/#list]
+				</div>
+              </div>
+              <div class="col-md-9">
+	              <div class="panel panel-default">
+		            <div class="panel-heading">词条聚类测试</div>
+		            <div class="panel-body">
+		              <form class="form-inline">
+		                <div class="form-group">
+		                  <label for="txtWord">nCluster, beta</label>
+		                  <input type="text" class="form-control" id="nCluster">
+		                  <input type="text" class="form-control" id="limitEval">
+		                </div>
+		                <button type="button" class="btn btn-default" onclick="javascript:doCluster();">测试聚类</button><br>
+		              </form><br>
+		              <form action="" class="form-inline">
+		                <div class="form-group">
+		                  <label>聚类结果：</label>
+		                  <textarea class="form-control" rows="30" id="cluster_result" cols="120"></textarea>
+		                </div>
+		              </form>
+		            </div>
+		          </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    <div class="modal fade" id="divContentsShow" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">词条描述</h4>
+          </div>
+          <div class="modal-body">
+            <p id="p_content">111111...</p>
+          </div>
+          <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">关闭</button></div>
+        </div>
+      </div>
+    
+    </div>
+    
+  </body>
+</html>
