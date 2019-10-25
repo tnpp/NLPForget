@@ -92,10 +92,15 @@
           <div class="modal-body">
             [#if dics?exists && dics?size gt 0]
                 <table class="table table-bordered">
+                  <thead><tr><td>主词</td><td>遗忘词频</td><td>累计词频</td><td>词权重</td><td>成熟度</td></tr></thead>
                   <tbody>
                   [#list dics as d]
                     <tr>
                       <td>${d.word!!}</td>
+                      <td>${d.forgetFreq!!}</td>
+                      <td>${d.freq!!}</td>
+                      <td>${d.weight!!}</td>
+                      <td>${d.maturity!!}</td>
                     </tr>
                   [/#list]
                   </tbody>
