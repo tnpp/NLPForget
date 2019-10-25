@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.myproject.nlpdemo.service.lstmcrf_ner.LstmCrfNerModelBase.CategoryEnum;
 import com.myproject.nlpdemo.service.lstmcrf_ner.LstmCrfNerService;
 import com.myproject.nlpdemo.service.textcnn.TfTextCnnPredictService;
 
@@ -40,14 +39,10 @@ public class TfController {
 
     @ResponseBody
     @RequestMapping(value = "do_ner", method = RequestMethod.GET, produces = "text/plain;charset=utf-8")
-    public String doNer(String category1, String txtWord) {
-        CategoryEnum cate = CategoryEnum.LIGTH;
-        try {
-            CategoryEnum.valueOf(category1);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        List<String[]> a = lstmCrfNerService.getLabel(cate, txtWord);
-        return "";
+    public String doNer(String categoryName, String txtWord) {
+        List<String[]> result = lstmCrfNerService.getLabel(categoryName, txtWord);
+        String s = result.stream().map(e -> e[1] + ": " + e[0])
+                .collect(Collectors.joining(", "));
+        return s;
     }
 }

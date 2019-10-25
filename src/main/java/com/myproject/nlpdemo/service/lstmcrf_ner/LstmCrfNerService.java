@@ -13,21 +13,20 @@ import org.springframework.stereotype.Service;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
-import com.myproject.nlpdemo.service.lstmcrf_ner.LstmCrfNerModelBase.CategoryEnum;
 import com.myproject.nlpdemo.utils.TextHandler;
 
 @Service
 public class LstmCrfNerService {
     private final static Logger logger = LoggerFactory.getLogger(LstmCrfNerService.class);
 
-    public List<String[]> getLabel(CategoryEnum cate, String text) {
+    public List<String[]> getLabel(String categoryName, String text) {
         text = TextHandler.thesaurusMerge(text);
-        Map<String, Integer> wordMap = LstmCrfNerModel.getInstance(cate).getWordVocabMap();
-        Map<Integer, String> labelMap = LstmCrfNerModel.getInstance(cate).getLabelMap();
+        Map<String, Integer> wordMap = NerModelSingleton.getInstance().getNerModel(categoryName).getWordVocabMap();
+        Map<Integer, String> labelMap = NerModelSingleton.getInstance().getNerModel(categoryName).getLabelMap();
         int[][] txtToIds = getTextToId(text, wordMap);
 
         List<String[]> predictResult = new ArrayList<>();
-        Session session = LstmCrfNerModel.getInstance(cate).getTfSession();
+        Session session = NerModelSingleton.getInstance().getNerModel(categoryName).getSession();
         try (Tensor inputs = Tensor.create(txtToIds);
                 Tensor result = session.runner().feed("inputs_x", inputs).fetch("batch_pred_sequence").run().get(0);) {
             long[] rshape = result.shape();
@@ -81,14 +80,15 @@ public class LstmCrfNerService {
 
     public static void main(String[] args) {
         LstmCrfNerService s = new LstmCrfNerService();
-        print(s.getLabel(CategoryEnum.LIGTH, "led李灯"));
-        print(s.getLabel(CategoryEnum.LIGTH, "三管荧光灯"));
-        print(s.getLabel(CategoryEnum.GREEN, "罗汉松造型树"));
-        print(s.getLabel(CategoryEnum.GREEN, "山里红树"));
-        print(s.getLabel(CategoryEnum.LIGTH, "led节能通道(25w)"));
-        print(s.getLabel(CategoryEnum.LIGTH, "绿羽毛"));
-        print(s.getLabel(CategoryEnum.GLASSTILE, "600*1200*10玻化砖"));
-        print(s.getLabel(CategoryEnum.GLASSTILE, "(伽马灰)夹胶玻璃"));
+        print(s.getLabel("灯具、光源", "led灯"));
+        print(s.getLabel("灯具、光源", "三管荧光灯"));
+        print(s.getLabel("灯具、光源", "led节能通道(25w)"));
+        print(s.getLabel("园林绿化", "罗汉松造型树"));
+        print(s.getLabel("园林绿化", "山里红树"));
+        print(s.getLabel("园林绿化", "led节能通道(25w)"));
+        print(s.getLabel("园林绿化", "绿羽毛"));
+        print(s.getLabel("玻璃、陶瓷及面砖", "600*1200*10玻化砖"));
+        print(s.getLabel("玻璃、陶瓷及面砖", "(伽马灰)夹胶玻璃"));
     }
     private int[][] getTextToId(String text, Map<String, Integer> word_to_id) {
         int[][] txtToIds = new int[64][300];
